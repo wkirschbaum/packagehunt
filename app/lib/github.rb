@@ -32,7 +32,10 @@ class Github
         Package.create!(
           name: g.name,
           version: g.version,
-          project: p
+          project: p,
+          project_name: p.project_name,
+          organisation_name: p.organisation_name,
+          language_version: p.language_version
         )
       end
     end

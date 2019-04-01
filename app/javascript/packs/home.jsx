@@ -11,7 +11,7 @@ class Home extends React.Component {
     };
 
     handleChange(term) {
-        console.log(term);
+        this.fetchReactions(term);
     };
 
     fetchReactions(term = "") {
@@ -54,6 +54,9 @@ class ListOfPackages extends React.Component {
                     </td>
                     <td>
                       {p.project_name}
+                    </td>
+                    <td>
+                      {p.language_version}
                     </td>
                   </tr>
               ))}

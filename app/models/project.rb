@@ -13,4 +13,11 @@
 #
 
 class Project < ApplicationRecord
+  def project_name
+    name.split('/').last
+  end
+
+  def organisation_name
+    name.split('/').first
+  end
 end

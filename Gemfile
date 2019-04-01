@@ -16,6 +16,8 @@ gem 'jbuilder', '~> 2.5'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'octokit', require: false
+gem 'textacular', '~> 5.0'
+gem 'kaminari'
 
 group :development, :test do
   gem 'byebug'
