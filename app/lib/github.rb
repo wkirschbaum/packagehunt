@@ -14,7 +14,7 @@ class Github
 
     projects = []
 
-    client.org_repos('prodigyfinance').take(20).each do |repo|
+    client.org_repos('prodigyfinance').each do |repo|
       print '.'
       begin
         lockfile = client.contents(repo.full_name, path: 'Gemfile.lock')
