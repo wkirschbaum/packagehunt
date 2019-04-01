@@ -3,6 +3,13 @@ require 'octokit'
 class Github
   def self.refresh
     client = Octokit::Client.new(access_token: ENV['GITHUB_ACCESS_TOKEN'])
+
+    print '*' * 20
+    print 'limit'
+    puts '*' * 20
+    puts client.rate_limit
+    puts '*' * 20
+
     client.auto_paginate = true
 
     projects = []

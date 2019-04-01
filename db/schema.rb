@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 2019_04_01_201031) do
     t.string "version", null: false
     t.string "language_version"
     t.string "project_name"
+    t.string "organisation_name"
     t.bigint "project_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
