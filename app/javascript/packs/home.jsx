@@ -18,23 +18,41 @@ class Home extends React.Component {
         axios.get('/api/packages?q=' + term)
             .then((response) => {
                 this.setState({
-                    reactions: response.data
+                    packages: response.data
                 });
             }).catch((error) => {
                 console.log(error);
             }).then(() => {
             });
-    }
+    };
+
+    componentDidMount() {
+        this.fetchReactions();
+    };
 
     render() {
         return (
             <div>
-              <div>Hello, you are home now</div>
               <Search handleChange={this.handleChange} />
+              <ListOfPackages packages={this.state.packages} />
             </div>
         );
     };
 };
+
+class ListOfPackages extends React.Component {
+    render() {
+        return (
+            <div>
+            {this.props.packages.map(p => (
+                <div key={p.id}>
+                  something
+                </div>
+            ))}
+            </div>
+        );
+    }
+}
 
 class Search extends React.Component {
     constructor(props) {
