@@ -17,4 +17,9 @@
 #
 
 class Package < ApplicationRecord
+  belongs_to :project
+
+  def project_name
+    project.name
+  end
 end
