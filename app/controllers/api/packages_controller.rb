@@ -1,5 +1,5 @@
 class Api::PackagesController < ActionController::API
   def index
-    render json: [{id: 1, name: 'one'}]
+    render json: Package.includes(:project).all
   end
 end

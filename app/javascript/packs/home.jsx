@@ -43,13 +43,21 @@ class Home extends React.Component {
 class ListOfPackages extends React.Component {
     render() {
         return (
-            <div>
-            {this.props.packages.map(p => (
-                <div key={p.id}>
-                  something
-                </div>
-            ))}
-            </div>
+            <table>
+              {this.props.packages.map(p => (
+                  <tr key={p.id}>
+                    <td>
+                      {p.name}
+                    </td>
+                    <td>
+                      {p.version}
+                    </td>
+                    <td>
+                      {p.project_name}
+                    </td>
+                  </tr>
+              ))}
+            </table>
         );
     }
 }

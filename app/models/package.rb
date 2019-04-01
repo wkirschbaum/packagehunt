@@ -22,4 +22,10 @@ class Package < ApplicationRecord
   def project_name
     project.name
   end
+
+  def as_json(*)
+    super.except("created_at", "updated_at").tap do |hash|
+      hash["project_name"] = project_name
+    end
+  end
 end
