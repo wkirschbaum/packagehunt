@@ -5,7 +5,7 @@ class CreatePackages < ActiveRecord::Migration[5.2]
     create_table :packages do |t|
       t.string :name, null: false
       t.string :version, null: false
-      t.string :language_version
+      t.string :ruby_version
       t.string :project_name
       t.string :organisation_name
       t.references :project, null: false

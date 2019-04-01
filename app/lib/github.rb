@@ -14,16 +14,18 @@ class Github
 
     projects = []
 
-    client.org_repos('prodigyfinance').each do |repo|
+    client.org_repos('prodigyfinance').take(20).each do |repo|
+      print '.'
       begin
         lockfile = client.contents(repo.full_name, path: 'Gemfile.lock')
         dotruby = client.contents(repo.full_name, path: '.ruby-version')
 
         projects << RubyProject.new(repo.full_name, lockfile, dotruby)
       rescue Octokit::NotFound => _e
-        puts "#{repo.full_name} does not have a Gemfile.lock file"
       end
     end
+
+    puts ''
 
     Package.destroy_all
     Project.destroy_all
@@ -31,8 +33,8 @@ class Github
     projects.each do |project|
       p = Project.create!(
         name: project.name,
-        language: 'ruby',
-        language_version: project.version
+        ruby_version: project.version,
+        lockfile: project.contents
       )
 
       project.gems.each do |g|
@@ -42,14 +44,20 @@ class Github
           project: p,
           project_name: p.project_name,
           organisation_name: p.organisation_name,
-          language_version: p.language_version
+          ruby_version: p.ruby_version
         )
       end
     end
+
+    print '*' * 20
+    print 'limit'
+    puts '*' * 20
+    puts client.rate_limit
+    puts '*' * 20
   end
 
   class RubyProject
-    attr_reader :name
+    attr_reader :name, :contents
 
     def initialize(name, lockfile, dotruby)
       @name = name

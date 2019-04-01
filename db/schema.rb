@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 2019_04_01_201031) do
   create_table "packages", force: :cascade do |t|
     t.string "name", null: false
     t.string "version", null: false
-    t.string "language_version"
+    t.string "ruby_version"
     t.string "project_name"
     t.string "organisation_name"
     t.bigint "project_id", null: false
@@ -30,8 +30,8 @@ ActiveRecord::Schema.define(version: 2019_04_01_201031) do
 
   create_table "projects", force: :cascade do |t|
     t.string "name", null: false
-    t.string "language", null: false
-    t.string "language_version"
+    t.string "ruby_version"
+    t.text "lockfile"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

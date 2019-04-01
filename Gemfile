@@ -19,6 +19,8 @@ gem 'octokit', require: false
 gem 'textacular', '~> 5.0'
 gem 'kaminari'
 
+gem 'bundler-audit'
+
 group :development, :test do
   gem 'byebug'
 

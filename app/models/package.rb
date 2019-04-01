@@ -4,10 +4,10 @@
 # Table name: packages
 #
 #  id                :bigint(8)        not null, primary key
-#  language_version  :string
 #  name              :string           not null
 #  organisation_name :string
 #  project_name      :string
+#  ruby_version      :string
 #  version           :string           not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
