@@ -22,7 +22,7 @@ class Package < ApplicationRecord
   belongs_to :project
 
   def self.search_all(input)
-    Package.includes(:project).fuzzy_search(input)
+    Package.includes(:project).where(name: input).sort_by { |p| Gem::Version.new(p.version) }
   end
 
   def project_name_short

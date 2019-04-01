@@ -44,22 +44,21 @@ class ListOfPackages extends React.Component {
     render() {
         return (
             <table>
-              {this.props.packages.map(p => (
-                  <tr key={p.id}>
-                    <td>
-                      {p.name}
-                    </td>
-                    <td>
-                      {p.version}
-                    </td>
-                    <td>
-                      {p.project_name}
-                    </td>
-                    <td>
-                      {p.language_version}
-                    </td>
-                  </tr>
-              ))}
+              <tbody>
+                {this.props.packages.map(p => (
+                    <tr key={p.id}>
+                      <td>
+                        {p.name}
+                      </td>
+                      <td>
+                        {p.version}
+                      </td>
+                      <td>
+                        {p.project_name}
+                      </td>
+                    </tr>
+                ))}
+              </tbody>
             </table>
         );
     }
