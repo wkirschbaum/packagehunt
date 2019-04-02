@@ -18,9 +18,7 @@ class Github
       print '.'
       begin
         lockfile = client.contents(repo.full_name, path: 'Gemfile.lock')
-        dotruby = client.contents(repo.full_name, path: '.ruby-version')
-
-        projects << RubyProject.new(repo.full_name, lockfile, dotruby)
+        projects << RubyProject.new(repo.full_name, lockfile, 'unknown')
       rescue Octokit::NotFound => _e
       end
     end
