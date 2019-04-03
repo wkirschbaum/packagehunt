@@ -2,6 +2,8 @@ require 'octokit'
 
 class Github
   def self.refresh
+    GemAudit.update
+
     client = Octokit::Client.new(access_token: ENV['GITHUB_ACCESS_TOKEN'])
 
     print '*' * 20
@@ -18,7 +20,7 @@ class Github
       print '.'
       begin
         lockfile = client.contents(repo.full_name, path: 'Gemfile.lock')
-        projects << RubyProject.new(repo.full_name, lockfile, 'unknown')
+        projects << RubyProject.new(repo.full_name, lockfile)
       rescue Octokit::NotFound => _e
       end
     end
@@ -28,12 +30,22 @@ class Github
     Package.destroy_all
     Project.destroy_all
 
+    vulns = []
+
     projects.each do |project|
       p = Project.create!(
         name: project.name,
         ruby_version: project.version,
         lockfile: project.contents
       )
+
+      print '*' * 10
+      print 'audit'
+      puts '*' * 10
+
+      vulns << project.audit
+
+      puts '*' * 10
 
       project.gems.each do |g|
         Package.create!(
@@ -52,15 +64,16 @@ class Github
     puts '*' * 20
     puts client.rate_limit
     puts '*' * 20
+
+    puts vulns.inspect
   end
 
   class RubyProject
     attr_reader :name, :contents
 
-    def initialize(name, lockfile, dotruby)
+    def initialize(name, lockfile)
       @name = name
       @contents = Base64.decode64(lockfile.content)
-      @dotruby = Base64.decode64(dotruby.content)
     end
 
     def gems
@@ -69,8 +82,12 @@ class Github
       end
     end
 
+    def audit
+      GemAudit.scan(@contents)
+    end
+
     def version
-      parsed_content.ruby_version || @dotruby
+      parsed_content.ruby_version
     end
 
     private

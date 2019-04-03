@@ -23,5 +23,6 @@ class GemAudit
     s.scan do |result|
       results << result
     end
+    results
   end
 end
