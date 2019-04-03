@@ -18,6 +18,7 @@ class Github
 
     client.org_repos('prodigyfinance').each do |repo|
       print '.'
+      next if repo.archived?
       begin
         lockfile = client.contents(repo.full_name, path: 'Gemfile.lock')
         projects << RubyProject.new(repo.full_name, lockfile)
