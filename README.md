@@ -5,7 +5,7 @@
 - node
 - postgresql
 
-# INSTALL
+### INSTALL
 
 `bundle install`
 
