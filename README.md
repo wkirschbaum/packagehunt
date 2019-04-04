@@ -1,24 +1,17 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+`bundle install`
+`bundle exec rake db:create db:migrate`
+`rails s`
 
-Things you may want to cover:
+### Getting a package list
 
-* Ruby version
+`bundle exec rake refresh <organisation-name>`
 
-* System dependencies
+Ensure to specify an environment variable with your gihub token
 
-* Configuration
+`export GITHUB_ACCESS_TOKEN=<your token>`
 
-* Database creation
+### Using the app
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Navigate to `http://locahost:3000` and type in the name of the gem in the search field
