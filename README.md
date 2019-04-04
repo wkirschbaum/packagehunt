@@ -1,14 +1,16 @@
 # README
 
 `bundle install`
+
 `bundle exec rake db:create db:migrate`
+
 `rails s`
 
 ### Getting a package list
 
-`bundle exec rake refresh <organisation-name>`
+`bundle exec rake refresh[organisation-name]`
 
-Ensure to specify an environment variable with your gihub token
+Ensure to specify an environment variable with your gihub token, otherwise you will only get the public repositories, not the private ones
 
 `export GITHUB_ACCESS_TOKEN=<your token>`
 

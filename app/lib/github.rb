@@ -1,7 +1,7 @@
 require 'octokit'
 
 class Github
-  def self.refresh
+  def self.refresh(org)
     GemAudit.update
 
     client = Octokit::Client.new(access_token: ENV['GITHUB_ACCESS_TOKEN'])
@@ -16,7 +16,7 @@ class Github
 
     projects = []
 
-    client.org_repos('prodigyfinance').each do |repo|
+    client.org_repos(org).each do |repo|
       print '.'
       next if repo.archived?
       begin
