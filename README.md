@@ -1,5 +1,12 @@
 # README
 
+### Dependencies
+- ruby
+- node
+- postgresql
+
+# INSTALL
+
 `bundle install`
 
 `bundle exec rake db:create db:migrate`
