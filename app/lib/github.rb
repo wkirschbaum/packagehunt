@@ -1,23 +1,37 @@
 require 'octokit'
 
 class Github
-  def self.refresh(org)
-    GemAudit.update
 
+  def self.print_limit(client)
+    print '*' * 10
+    print '  limit  '
+    print client.rate_limit.remaining
+    print '  '
+    puts '*' * 10
+  end
+
+  def self.each_repo(org)
     client = Octokit::Client.new(access_token: ENV['GITHUB_ACCESS_TOKEN'])
-
-    print '*' * 20
-    print 'limit'
-    puts '*' * 20
-    puts client.rate_limit
-    puts '*' * 20
-
     client.auto_paginate = true
 
-    projects = []
+    print_limit(client)
 
     client.org_repos(org).each do |repo|
       print '.'
+      yield repo, client
+    end
+
+    print_limit(client)
+
+    puts ''
+  end
+
+  def self.refresh(org)
+    GemAudit.update
+
+    projects = []
+
+    each_repo(org) do |repo, client|
       next if repo.archived?
       begin
         lockfile = client.contents(repo.full_name, path: 'Gemfile.lock')
@@ -25,8 +39,6 @@ class Github
       rescue Octokit::NotFound => _e
       end
     end
-
-    puts ''
 
     Package.destroy_all
     Project.destroy_all
@@ -40,13 +52,7 @@ class Github
         lockfile: project.contents
       )
 
-      print '*' * 10
-      print 'audit'
-      puts '*' * 10
-
       vulns << project.audit
-
-      puts '*' * 10
 
       project.gems.each do |g|
         Package.create!(
@@ -60,12 +66,8 @@ class Github
       end
     end
 
-    print '*' * 20
-    print 'limit'
+    puts "Vulnerabilities"
     puts '*' * 20
-    puts client.rate_limit
-    puts '*' * 20
-
     puts vulns.inspect
   end
 
