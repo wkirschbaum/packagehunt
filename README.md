@@ -1,5 +1,12 @@
 # README
 
+### Dependencies
+- ruby
+- node
+- postgresql
+
+### INSTALL
+
 `bundle install`
 
 `bundle exec rake db:create db:migrate`
@@ -16,4 +23,4 @@ Ensure to specify an environment variable with your gihub token, otherwise you w
 
 ### Using the app
 
-Navigate to `http://locahost:3000` and type in the name of the gem in the search field
+Navigate to http://locahost:3000 and type in the name of the gem in the search field
