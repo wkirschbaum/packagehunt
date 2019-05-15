@@ -21,19 +21,53 @@ class Github
       yield repo, client
     end
 
+    puts ''
+
     print_limit(client)
 
     puts ''
+  end
+
+  class RepoStats
+    def initialize(client, repo)
+      @repo = repo
+      @client = client
+    end
+
+    def write(filename)
+      File.open(filename, 'a') do |f|
+        total_lines = lines_of_code
+        changes_per_week&.each do |c|
+          f.write("#{@repo.full_name}, #{total_lines}, #{c.join(',')}\n")
+        end
+      end
+    end
+
+    private
+
+    def lines_of_code
+      @client.languages(@repo.full_name).to_h.values.sum
+    end
+
+    def changes_per_week
+      @client.code_frequency_stats(@repo.full_name)
+    end
   end
 
   def self.refresh(org)
     GemAudit.update
 
     projects = []
+    File.open('githubstats.csv', 'w') do |f|
+      f.write("repo,total_lines,week,additions,deletions\n")
+    end
 
     each_repo(org) do |repo, client|
       next if repo.archived?
       begin
+        stats = RepoStats.new(client, repo)
+        stats.write('githubstats.csv')
+
         lockfile = client.contents(repo.full_name, path: 'Gemfile.lock')
         projects << RubyProject.new(repo.full_name, lockfile)
       rescue Octokit::NotFound => _e
