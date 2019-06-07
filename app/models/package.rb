@@ -29,9 +29,14 @@ class Package < ApplicationRecord
     project.name.split('/').last
   end
 
+  def project_url
+    "https://github.com/#{organisation_name}/#{project_name}"
+  end
+
   def as_json(*)
     super.except("created_at", "updated_at").tap do |hash|
       hash["project_name"] = project_name
+      hash["project_url"] = project_url
     end
   end
 end

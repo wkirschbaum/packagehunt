@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.6.1'
+ruby '2.6.3'
 
 gem 'rails', '~> 5.2.3'
 gem 'pg', '>= 0.18', '< 2.0'
@@ -18,8 +18,11 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'octokit', require: false
 gem 'textacular', '~> 5.0'
 gem 'kaminari'
+gem 'tty-spinner'
 
 gem 'bundler-audit'
+
+gem 'onebox'
 
 group :development, :test do
   gem 'byebug'

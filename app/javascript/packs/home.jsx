@@ -54,8 +54,8 @@ class ListOfPackages extends React.Component {
                         {p.version}
                       </td>
                       <td>
-                        {p.project_name}
-                      </td>
+                        <a href={p.project_url}>{p.project_name}</a>
+                    </td>
                     </tr>
                 ))}
               </tbody>

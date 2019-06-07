@@ -17,8 +17,8 @@ class Github
     print_limit(client)
 
     client.org_repos(org).each do |repo|
-      print '.'
       yield repo, client
+      print '.'
     end
 
     puts ''
@@ -34,12 +34,10 @@ class Github
       @client = client
     end
 
-    def write(filename)
-      File.open(filename, 'a') do |f|
-        total_lines = lines_of_code
-        changes_per_week&.each do |c|
-          f.write("#{@repo.full_name}, #{total_lines}, #{c.join(',')}\n")
-        end
+    def write(file)
+      total_lines = lines_of_code
+      changes_per_week&.each do |c|
+        file.write("#{@repo.full_name}, #{total_lines}, #{c.join(',')}\n")
       end
     end
 
@@ -50,55 +48,62 @@ class Github
     end
 
     def changes_per_week
-      @client.code_frequency_stats(@repo.full_name)
+      changes = @client.code_frequency_stats(@repo.full_name)
+      if changes.nil?
+        puts "no changes for #{@repo.full_name}"
+      end
+      changes
     end
   end
 
   def self.refresh(org)
+    spinner = TTY::Spinner.new
+
+    spinner.auto_spin
+
     GemAudit.update
 
     projects = []
     File.open('githubstats.csv', 'w') do |f|
-      f.write("repo,total_lines,week,additions,deletions\n")
-    end
-
-    each_repo(org) do |repo, client|
-      next if repo.archived?
-      begin
-        stats = RepoStats.new(client, repo)
-        stats.write('githubstats.csv')
-
-        lockfile = client.contents(repo.full_name, path: 'Gemfile.lock')
-        projects << RubyProject.new(repo.full_name, lockfile)
-      rescue Octokit::NotFound => _e
+      f.write("repo, total_lines, week,additions, deletions\n")
+      each_repo(org) do |repo, client|
+        next if repo.archived?
+        begin
+          lockfile = client.contents(repo.full_name, path: 'Gemfile.lock')
+          projects << RubyProject.new(repo.full_name, lockfile)
+        rescue Octokit::NotFound => e
+          puts e.inspect
+        end
       end
     end
 
-    Package.destroy_all
-    Project.destroy_all
+    # Package.destroy_all
+    # Project.destroy_all
 
-    vulns = []
+    # vulns = []
 
-    projects.each do |project|
-      p = Project.create!(
-        name: project.name,
-        ruby_version: project.version,
-        lockfile: project.contents
-      )
+    # projects.each do |project|
+    #   p = Project.create!(
+    #     name: project.name,
+    #     ruby_version: project.version,
+    #     lockfile: project.contents
+    #   )
 
-      vulns << project.audit
+    #   vulns << project.audit
 
-      project.gems.each do |g|
-        Package.create!(
-          name: g.name,
-          version: g.version,
-          project: p,
-          project_name: p.project_name,
-          organisation_name: p.organisation_name,
-          ruby_version: p.ruby_version
-        )
-      end
-    end
+    #   project.gems.each do |g|
+    #     Package.create!(
+    #       name: g.name,
+    #       version: g.version,
+    #       project: p,
+    #       project_name: p.project_name,
+    #       organisation_name: p.organisation_name,
+    #       ruby_version: p.ruby_version
+    #     )
+    #   end
+    # end
+
+    spinner.stop('Done')
 
     puts "Vulnerabilities"
     puts '*' * 20
