@@ -22,8 +22,6 @@ gem 'tty-spinner'
 
 gem 'bundler-audit'
 
-gem 'onebox'
-
 group :development, :test do
   gem 'byebug'
 
